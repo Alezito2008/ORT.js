@@ -23,7 +23,22 @@ async function iniciarSesion(dni, contraseña) {
         .split(', ')[1]
         .split(';')[0]
     cookies = cookie
-    console.log(cookie)
+
+    return logeado
+}
+
+async function obtenerDatosCuenta() {
+    const respuesta = await fetch('https://campus.ort.edu.ar/ajaxactions/GetLoggedInData', {
+        method: 'GET',
+        headers: {
+            'Cookie': cookies
+        }
+    })
+
+    const data = await respuesta.json()
+    data.nombre = data.nombre.replaceAll('<br/>', ' ')
+
+    return data
 }
 
 async function buscarUsuario(query) {
@@ -80,9 +95,6 @@ async function obtenerURLMensaje(idUsuario) {
 }
 
 async function main() {
-    await iniciarSesion(process.env.DNI, process.env.PASSWORD)
-    const usuario = await(buscarUsuario('49009206'))
-    const mensaje = await enviarMensaje(usuario.id, 'Manzana')
 }
 
 main()
